@@ -46,6 +46,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@grupo10-pos-fiap/design-system": "^1.0.7",
     "@types/jest": "^27.0.1",
     "@types/react": "^19.2.4",
     "@types/react-dom": "^19.2.3",

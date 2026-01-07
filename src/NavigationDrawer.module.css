@@ -1,0 +1,141 @@
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 65px;
+  height: calc(100vh - 65px);
+  width: 280px;
+  background-color: var(--color-bg-default);
+  border-right: 1px solid var(--color-border-default);
+  box-shadow: var(--shadow-sm);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.sidebarContent {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-lg);
+  gap: var(--spacing-xl);
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.greeting {
+  color: var(--color-content-default);
+  font-size: var(--font-subtitle);
+  line-height: 1.4;
+}
+
+.date {
+  color: var(--color-content-secondary);
+  font-size: var(--font-small);
+}
+
+.accountSelectWrapper {
+  width: 100%;
+}
+
+.navLinks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  flex: 1;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-default);
+  text-align: left;
+  width: 100%;
+  gap: var(--spacing-sm);
+}
+
+.navLink:hover {
+  background-color: var(--color-bg-hovered);
+}
+
+.navLinkActive {
+  background-color: var(--color-soft);
+  color: var(--color-primary);
+}
+
+.navLinkActive .navLinkContent {
+  color: var(--color-primary);
+}
+
+.navLinkContent {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex: 1;
+  color: var(--color-content-default);
+}
+
+.navLinkContent svg {
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.navLink svg:last-child {
+  flex-shrink: 0;
+  color: var(--color-content-secondary);
+  opacity: 0.6;
+}
+
+.navLinkActive svg:last-child {
+  color: var(--color-primary);
+  opacity: 1;
+}
+
+.retryButton {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-small);
+  font-weight: var(--font-weight-medium);
+  transition: background-color var(--transition-default);
+}
+
+.retryButton:hover {
+  background-color: var(--color-border-focused);
+}
+
+/* Estilos globais para ajustar o layout quando a sidebar está presente */
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    top: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-default);
+  }
+
+  .sidebarContent {
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+
+  :global(body),
+  :global(main) {
+    margin-left: 0;
+  }
+}
