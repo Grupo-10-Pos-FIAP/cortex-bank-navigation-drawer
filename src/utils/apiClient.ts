@@ -20,16 +20,29 @@ export async function fetchApi(
   }
 
   const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:8080";
-  const response = await fetch(`${API_BASE_URL}${url}`, {
-    ...options,
-    headers,
-  });
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}${url}`, {
+      ...options,
+      headers,
+    });
 
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => response.statusText);
-    throw new Error(`Erro na requisição: ${response.status} ${errorText}`);
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => response.statusText);
+      throw new Error(`Erro na requisição: ${response.status} ${errorText}`);
+    }
+
+    return response;
+  } catch (error) {
+    // Trata erros de rede/CORS de forma mais específica
+    if (error instanceof TypeError && error.message.includes("fetch")) {
+      throw new Error("Erro de conexão: Não foi possível conectar ao servidor. Verifique se o backend está rodando.");
+    }
+    if (error instanceof Error && error.message.includes("CORS")) {
+      throw new Error("Erro de CORS: O servidor não permite requisições desta origem.");
+    }
+    // Re-throw outros erros
+    throw error;
   }
-
-  return response;
 }
 

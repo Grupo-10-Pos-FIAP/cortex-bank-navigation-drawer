@@ -31,8 +31,16 @@ export default function Root() {
         setAccountId(accountToSelect);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao carregar contas");
+      // Trata erros de forma mais robusta, não bloqueia a renderização
+      const errorMessage = err instanceof Error ? err.message : "Erro ao carregar contas";
+      setError(errorMessage);
       console.error("Erro ao carregar contas:", err);
+      
+      // Tenta usar conta do localStorage se houver, mesmo com erro
+      const storedAccountId = getAccountId();
+      if (storedAccountId) {
+        setSelectedAccountId(storedAccountId);
+      }
     } finally {
       setLoading(false);
     }
@@ -98,20 +106,9 @@ export default function Root() {
     );
   }
 
-  if (error) {
-    return (
-      <aside className={styles.sidebar}>
-        <div className={styles.sidebarContent}>
-          <Text variant="body" color="error" style={{ marginBottom: "var(--spacing-md)" }}>
-            {error}
-          </Text>
-          <button onClick={loadAccounts} className={styles.retryButton}>
-            Tentar novamente
-          </button>
-        </div>
-      </aside>
-    );
-  }
+  // Mesmo com erro, tenta renderizar o menu básico para não bloquear a navegação
+  // Apenas mostra o erro de forma não bloqueante
+  const showError = error && accounts.length === 0;
 
   return (
     <aside className={styles.sidebar}>
@@ -126,6 +123,35 @@ export default function Root() {
           </Text>
         </div>
 
+        {/* Mensagem de erro não bloqueante */}
+        {showError && (
+          <div style={{ 
+            padding: "var(--spacing-sm)", 
+            marginBottom: "var(--spacing-md)",
+            backgroundColor: "#ffebee",
+            border: "1px solid #ef5350",
+            borderRadius: "4px"
+          }}>
+            <Text variant="small" color="error" style={{ marginBottom: "var(--spacing-xs)" }}>
+              {error}
+            </Text>
+            <button 
+              onClick={loadAccounts} 
+              style={{
+                padding: "4px 8px",
+                fontSize: "12px",
+                backgroundColor: "#1976d2",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer"
+              }}
+            >
+              Tentar novamente
+            </button>
+          </div>
+        )}
+
         {/* Select de contas */}
         {accounts.length > 0 && (
           <div className={styles.accountSelectWrapper}>
@@ -139,6 +165,15 @@ export default function Root() {
               onValueChange={handleAccountChange}
               width="100%"
             />
+          </div>
+        )}
+        
+        {/* Placeholder quando não há contas mas não há erro crítico */}
+        {!showError && accounts.length === 0 && !loading && (
+          <div style={{ padding: "var(--spacing-sm)", marginBottom: "var(--spacing-md)" }}>
+            <Text variant="small" color="gray600">
+              Nenhuma conta disponível
+            </Text>
           </div>
         )}
 
