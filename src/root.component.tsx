@@ -6,7 +6,6 @@ export default function Root(props) {
       <button onClick={() => navigateToUrl("/dashboard")}>Dashboard</button>
       <button onClick={() => navigateToUrl("/transactions")}>Transações</button>
       <button onClick={() => navigateToUrl("/statement")}>Extrato</button>
-      <button onClick={() => navigateToUrl("/auth")}>Auth</button>
     </nav>
   );
 }
