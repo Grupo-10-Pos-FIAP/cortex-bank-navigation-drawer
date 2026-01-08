@@ -3,7 +3,7 @@ import { navigateToUrl } from "single-spa";
 import { Dropdown, Text, Loading } from "@grupo10-pos-fiap/design-system";
 import { fetchAccounts, Account } from "./api/account.api";
 import { getAccountId, setAccountId } from "./utils/accountStorage";
-import { HomeIcon, StatementIcon, TransactionIcon, ChevronRightIcon } from "./components/Icons";
+import { HomeIcon, StatementIcon, TransactionIcon, ChevronRightIcon, LogoutIcon } from "./components/Icons";
 import "./styles/tokens.css";
 import styles from "./NavigationDrawer.module.css";
 
@@ -81,9 +81,9 @@ export default function Root() {
   // Obter nome do usuário (pode vir do localStorage ou API)
   const userName = useMemo(() => {
     if (typeof window !== "undefined" && window.localStorage) {
-      return localStorage.getItem("userName") || "*usuário*";
+      return localStorage.getItem("userName") || "";
     }
-    return "*usuário*";
+    return "";
   }, []);
 
   // Detectar rota atual
@@ -95,6 +95,15 @@ export default function Root() {
   }, []);
 
   const isActive = (path: string) => currentPath === path || currentPath.startsWith(path);
+
+  const handleLogout = useCallback(() => {
+    // Limpar todo o localStorage
+    if (typeof window !== "undefined" && window.localStorage) {
+      localStorage.clear();
+    }
+    // Redirecionar para a página de autenticação
+    navigateToUrl("/auth");
+  }, []);
 
   if (loading) {
     return (
@@ -116,7 +125,7 @@ export default function Root() {
         {/* Header com saudação e data */}
         <div className={styles.header}>
           <Text variant="subtitle" weight="bold" className={styles.greeting}>
-            Bem vindo, {userName}
+            Bem vindo {userName}
           </Text>
           <Text variant="small" color="gray600" className={styles.date}>
             {currentDate}
@@ -218,6 +227,19 @@ export default function Root() {
             <ChevronRightIcon />
           </button>
         </nav>
+
+        {/* Botão de Logout alinhado ao bottom */}
+        <button
+          className={styles.logoutButton}
+          onClick={handleLogout}
+        >
+          <div className={styles.logoutButtonContent}>
+            <LogoutIcon />
+            <Text variant="body" weight="regular">
+              Sair
+            </Text>
+          </div>
+        </button>
       </div>
     </aside>
   );
