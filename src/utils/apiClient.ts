@@ -1,3 +1,5 @@
+import { getApiBaseUrl } from "@/config/api.config";
+
 function getAuthToken(): string | null {
   if (typeof window !== "undefined" && window.localStorage) {
     return localStorage.getItem("token");
@@ -19,7 +21,7 @@ export async function fetchApi(
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:8080";
+  const API_BASE_URL = getApiBaseUrl();
   
   try {
     const response = await fetch(`${API_BASE_URL}${url}`, {
