@@ -86,15 +86,55 @@ export default function Root() {
     return "";
   }, []);
 
-  // Detectar rota atual
-  const currentPath = useMemo(() => {
+  // Detectar rota atual com estado reativo
+  const [currentPath, setCurrentPath] = useState<string>(() => {
     if (typeof window !== "undefined") {
       return window.location.pathname;
     }
     return "";
+  });
+
+  // Atualizar currentPath quando a rota mudar
+  useEffect(() => {
+    const updatePath = () => {
+      if (typeof window !== "undefined") {
+        setCurrentPath(window.location.pathname);
+      }
+    };
+
+    // Atualizar imediatamente
+    updatePath();
+
+    // Listener para mudanças de rota do single-spa
+    const handleRouteChange = () => {
+      setTimeout(updatePath, 0);
+    };
+
+    // Listener para navegação do browser (back/forward)
+    const handlePopState = () => {
+      updatePath();
+    };
+
+    window.addEventListener("single-spa:routing-event", handleRouteChange);
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("hashchange", updatePath);
+
+    return () => {
+      window.removeEventListener("single-spa:routing-event", handleRouteChange);
+      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("hashchange", updatePath);
+    };
   }, []);
 
-  const isActive = (path: string) => currentPath === path || currentPath.startsWith(path);
+  // Função melhorada para verificar se uma rota está ativa
+  const isActive = (path: string) => {
+    if (path === "/") {
+      // Para a rota raiz, verificar se é exatamente "/" ou "/dashboard"
+      return currentPath === "/" || currentPath === "/dashboard";
+    }
+    // Para outras rotas, verificar match exato ou se começa com o path seguido de "/" ou fim da string
+    return currentPath === path || currentPath.startsWith(path + "/");
+  };
 
   const handleLogout = useCallback(() => {
     // Limpar todo o localStorage
@@ -189,12 +229,12 @@ export default function Root() {
         {/* Links de navegação */}
         <nav className={styles.navLinks}>
           <button
-            className={`${styles.navLink} ${isActive("/dashboard") || isActive("/") ? styles.navLinkActive : ""}`}
+            className={`${styles.navLink} ${isActive("/") ? styles.navLinkActive : ""}`}
             onClick={() => navigateToUrl("/dashboard")}
           >
             <div className={styles.navLinkContent}>
               <HomeIcon />
-              <Text variant="body" weight={isActive("/dashboard") || isActive("/") ? "semibold" : "regular"}>
+              <Text variant="body" weight={isActive("/") ? "semibold" : "regular"}>
                 Inicio
               </Text>
             </div>
@@ -228,12 +268,12 @@ export default function Root() {
           </button>
         </nav>
 
-        {/* Botão de Logout alinhado ao bottom */}
+        {/* Item de menu Sair */}
         <button
-          className={styles.logoutButton}
+          className={`${styles.navLink} ${styles.logoutButton}`}
           onClick={handleLogout}
         >
-          <div className={styles.logoutButtonContent}>
+          <div className={styles.navLinkContent}>
             <LogoutIcon />
             <Text variant="body" weight="regular">
               Sair
