@@ -3,15 +3,97 @@ import { navigateToUrl } from "single-spa";
 import { Dropdown, Text, Loading } from "@grupo10-pos-fiap/design-system";
 import { fetchAccounts, Account } from "./api/account.api";
 import { getAccountId, setAccountId } from "./utils/accountStorage";
-import { HomeIcon, StatementIcon, TransactionIcon, ChevronRightIcon, LogoutIcon } from "./components/Icons";
+import {
+  HomeIcon,
+  StatementIcon,
+  TransactionIcon,
+  ChevronRightIcon,
+  LogoutIcon,
+} from "./components/Icons";
 import "./styles/tokens.css";
 import styles from "./NavigationDrawer.module.css";
 
 export default function Root() {
   const [accounts, setAccounts] = useState<Account[]>([]);
-  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
+  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(
+    null
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Verificar se é mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+
+      if (!mobile && isSidebarOpen) {
+        setIsSidebarOpen(false);
+        // Fechar o overlay quando mudar para desktop
+        window.dispatchEvent(new CustomEvent("sidebar-close"));
+      }
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    // Ouvir eventos do botão hambúrguer no header
+    const handleSidebarToggle = (event: CustomEvent) => {
+      setIsSidebarOpen(event.detail.isOpen);
+    };
+
+    window.addEventListener(
+      "sidebar-toggle",
+      handleSidebarToggle as EventListener
+    );
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener(
+        "sidebar-toggle",
+        handleSidebarToggle as EventListener
+      );
+    };
+  }, [isSidebarOpen]);
+
+  // Função para fechar sidebar e overlay
+  const closeSidebar = useCallback(() => {
+    if (isMobile && isSidebarOpen) {
+      setIsSidebarOpen(false);
+      // Disparar evento para fechar o overlay no HTML também
+      window.dispatchEvent(new CustomEvent("sidebar-close"));
+    }
+  }, [isMobile, isSidebarOpen]);
+
+  // Função para navegar e fechar sidebar
+  const handleNavigate = useCallback(
+    (url: string) => {
+      if (isMobile) {
+        closeSidebar();
+      }
+      navigateToUrl(url);
+    },
+    [isMobile, closeSidebar]
+  );
+
+  // Fechar sidebar também quando a rota mudar (via navegação externa)
+  useEffect(() => {
+    const handleRouteChange = () => {
+      if (isMobile && isSidebarOpen) {
+        closeSidebar();
+      }
+    };
+
+    window.addEventListener("single-spa:routing-event", handleRouteChange);
+    window.addEventListener("popstate", handleRouteChange);
+
+    return () => {
+      window.removeEventListener("single-spa:routing-event", handleRouteChange);
+      window.removeEventListener("popstate", handleRouteChange);
+    };
+  }, [isMobile, isSidebarOpen, closeSidebar]);
 
   const loadAccounts = useCallback(async () => {
     try {
@@ -20,23 +102,23 @@ export default function Root() {
       const accountsData = await fetchAccounts();
       setAccounts(accountsData);
 
-      // Se não há conta selecionada, usar a primeira conta ou a do localStorage
       const storedAccountId = getAccountId();
       if (accountsData.length > 0) {
-        const accountToSelect = storedAccountId && accountsData.find((acc) => acc.id === storedAccountId)
-          ? storedAccountId
-          : accountsData[0].id;
-        
+        const accountToSelect =
+          storedAccountId &&
+          accountsData.find((acc) => acc.id === storedAccountId)
+            ? storedAccountId
+            : accountsData[0].id;
+
         setSelectedAccountId(accountToSelect);
         setAccountId(accountToSelect);
       }
     } catch (err) {
-      // Trata erros de forma mais robusta, não bloqueia a renderização
-      const errorMessage = err instanceof Error ? err.message : "Erro ao carregar contas";
+      const errorMessage =
+        err instanceof Error ? err.message : "Erro ao carregar contas";
       setError(errorMessage);
       console.error("Erro ao carregar contas:", err);
-      
-      // Tenta usar conta do localStorage se houver, mesmo com erro
+
       const storedAccountId = getAccountId();
       if (storedAccountId) {
         setSelectedAccountId(storedAccountId);
@@ -63,14 +145,23 @@ export default function Root() {
     if (!selectedAccountId || accounts.length === 0) {
       return "Selecione uma conta";
     }
-    const account = accounts.find((acc) => acc.id === selectedAccountId) || accounts[0];
+    const account =
+      accounts.find((acc) => acc.id === selectedAccountId) || accounts[0];
     return getAccountLabel(account);
   };
 
   // Formatar data atual
   const currentDate = useMemo(() => {
     const date = new Date();
-    const days = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+    const days = [
+      "Domingo",
+      "Segunda-feira",
+      "Terça-feira",
+      "Quarta-feira",
+      "Quinta-feira",
+      "Sexta-feira",
+      "Sábado",
+    ];
     const dayName = days[date.getDay()];
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -78,7 +169,7 @@ export default function Root() {
     return `${dayName}, ${day}/${month}/${year}`;
   }, []);
 
-  // Obter nome do usuário (pode vir do localStorage ou API)
+  // Obter nome do usuário
   const userName = useMemo(() => {
     if (typeof window !== "undefined" && window.localStorage) {
       return localStorage.getItem("userName") || "";
@@ -86,7 +177,7 @@ export default function Root() {
     return "";
   }, []);
 
-  // Detectar rota atual com estado reativo
+  // Detectar rota atual
   const [currentPath, setCurrentPath] = useState<string>(() => {
     if (typeof window !== "undefined") {
       return window.location.pathname;
@@ -94,7 +185,6 @@ export default function Root() {
     return "";
   });
 
-  // Atualizar currentPath quando a rota mudar
   useEffect(() => {
     const updatePath = () => {
       if (typeof window !== "undefined") {
@@ -102,15 +192,12 @@ export default function Root() {
       }
     };
 
-    // Atualizar imediatamente
     updatePath();
 
-    // Listener para mudanças de rota do single-spa
     const handleRouteChange = () => {
       setTimeout(updatePath, 0);
     };
 
-    // Listener para navegação do browser (back/forward)
     const handlePopState = () => {
       updatePath();
     };
@@ -126,28 +213,27 @@ export default function Root() {
     };
   }, []);
 
-  // Função melhorada para verificar se uma rota está ativa
   const isActive = (path: string) => {
     if (path === "/") {
-      // Para a rota raiz, verificar se é exatamente "/" ou "/dashboard"
       return currentPath === "/" || currentPath === "/dashboard";
     }
-    // Para outras rotas, verificar match exato ou se começa com o path seguido de "/" ou fim da string
     return currentPath === path || currentPath.startsWith(path + "/");
   };
 
   const handleLogout = useCallback(() => {
-    // Limpar todo o localStorage
     if (typeof window !== "undefined" && window.localStorage) {
       localStorage.clear();
     }
-    // Redirecionar para a página de autenticação
     navigateToUrl("/auth");
   }, []);
 
   if (loading) {
     return (
-      <aside className={styles.sidebar}>
+      <aside
+        className={`${styles.sidebar} ${
+          isMobile && isSidebarOpen ? styles.open : ""
+        }`}
+      >
         <div className={styles.sidebarContent}>
           <Loading text="Carregando..." size="small" />
         </div>
@@ -155,14 +241,15 @@ export default function Root() {
     );
   }
 
-  // Mesmo com erro, tenta renderizar o menu básico para não bloquear a navegação
-  // Apenas mostra o erro de forma não bloqueante
   const showError = error && accounts.length === 0;
 
   return (
-    <aside className={styles.sidebar}>
+    <aside
+      className={`${styles.sidebar} ${
+        isMobile && isSidebarOpen ? styles.open : ""
+      }`}
+    >
       <div className={styles.sidebarContent}>
-        {/* Header com saudação e data */}
         <div className={styles.header}>
           <Text variant="subtitle" weight="bold" className={styles.greeting}>
             Bem vindo {userName}
@@ -172,20 +259,25 @@ export default function Root() {
           </Text>
         </div>
 
-        {/* Mensagem de erro não bloqueante */}
         {showError && (
-          <div style={{ 
-            padding: "var(--spacing-sm)", 
-            marginBottom: "var(--spacing-md)",
-            backgroundColor: "#ffebee",
-            border: "1px solid #ef5350",
-            borderRadius: "4px"
-          }}>
-            <Text variant="small" color="error" style={{ marginBottom: "var(--spacing-xs)" }}>
+          <div
+            style={{
+              padding: "var(--spacing-sm)",
+              marginBottom: "var(--spacing-md)",
+              backgroundColor: "#ffebee",
+              border: "1px solid #ef5350",
+              borderRadius: "4px",
+            }}
+          >
+            <Text
+              variant="small"
+              color="error"
+              style={{ marginBottom: "var(--spacing-xs)" }}
+            >
               {error}
             </Text>
-            <button 
-              onClick={loadAccounts} 
+            <button
+              onClick={loadAccounts}
               style={{
                 padding: "4px 8px",
                 fontSize: "12px",
@@ -193,7 +285,7 @@ export default function Root() {
                 color: "white",
                 border: "none",
                 borderRadius: "4px",
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               Tentar novamente
@@ -201,7 +293,6 @@ export default function Root() {
           </div>
         )}
 
-        {/* Select de contas */}
         {accounts.length > 0 && (
           <div className={styles.accountSelectWrapper}>
             <Dropdown
@@ -216,25 +307,33 @@ export default function Root() {
             />
           </div>
         )}
-        
-        {/* Placeholder quando não há contas mas não há erro crítico */}
+
         {!showError && accounts.length === 0 && !loading && (
-          <div style={{ padding: "var(--spacing-sm)", marginBottom: "var(--spacing-md)" }}>
+          <div
+            style={{
+              padding: "var(--spacing-sm)",
+              marginBottom: "var(--spacing-md)",
+            }}
+          >
             <Text variant="small" color="gray600">
               Nenhuma conta disponível
             </Text>
           </div>
         )}
 
-        {/* Links de navegação */}
         <nav className={styles.navLinks}>
           <button
-            className={`${styles.navLink} ${isActive("/") ? styles.navLinkActive : ""}`}
-            onClick={() => navigateToUrl("/dashboard")}
+            className={`${styles.navLink} ${
+              isActive("/") ? styles.navLinkActive : ""
+            }`}
+            onClick={() => handleNavigate("/dashboard")}
           >
             <div className={styles.navLinkContent}>
               <HomeIcon />
-              <Text variant="body" weight={isActive("/") ? "semibold" : "regular"}>
+              <Text
+                variant="body"
+                weight={isActive("/") ? "semibold" : "regular"}
+              >
                 Inicio
               </Text>
             </div>
@@ -242,12 +341,17 @@ export default function Root() {
           </button>
 
           <button
-            className={`${styles.navLink} ${isActive("/statement") ? styles.navLinkActive : ""}`}
-            onClick={() => navigateToUrl("/statement")}
+            className={`${styles.navLink} ${
+              isActive("/statement") ? styles.navLinkActive : ""
+            }`}
+            onClick={() => handleNavigate("/statement")}
           >
             <div className={styles.navLinkContent}>
               <StatementIcon />
-              <Text variant="body" weight={isActive("/statement") ? "semibold" : "regular"}>
+              <Text
+                variant="body"
+                weight={isActive("/statement") ? "semibold" : "regular"}
+              >
                 Extrato
               </Text>
             </div>
@@ -255,12 +359,17 @@ export default function Root() {
           </button>
 
           <button
-            className={`${styles.navLink} ${isActive("/transactions") ? styles.navLinkActive : ""}`}
-            onClick={() => navigateToUrl("/transactions")}
+            className={`${styles.navLink} ${
+              isActive("/transactions") ? styles.navLinkActive : ""
+            }`}
+            onClick={() => handleNavigate("/transactions")}
           >
             <div className={styles.navLinkContent}>
               <TransactionIcon />
-              <Text variant="body" weight={isActive("/transactions") ? "semibold" : "regular"}>
+              <Text
+                variant="body"
+                weight={isActive("/transactions") ? "semibold" : "regular"}
+              >
                 Transação
               </Text>
             </div>
@@ -268,7 +377,6 @@ export default function Root() {
           </button>
         </nav>
 
-        {/* Item de menu Sair */}
         <button
           className={`${styles.navLink} ${styles.logoutButton}`}
           onClick={handleLogout}

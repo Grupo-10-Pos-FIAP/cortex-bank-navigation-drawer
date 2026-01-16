@@ -1,3 +1,4 @@
+/* CSS do NavDrawer (sidebar) com funcionalidade mobile */
 .sidebar {
   position: fixed;
   left: 0;
@@ -10,6 +11,7 @@
   z-index: 1000;
   overflow-y: auto;
   overflow-x: hidden;
+  transition: transform var(--transition-default);
 }
 
 .sidebarContent {
@@ -29,6 +31,7 @@
   padding-bottom: var(--spacing-sm);
   border-bottom: 1px solid var(--color-border-default);
   flex-shrink: 0;
+  position: relative;
 }
 
 .greeting {
@@ -135,25 +138,30 @@
   outline: none;
 }
 
-/* Estilos globais para ajustar o layout quando a sidebar está presente */
-
+/* Estilos para mobile */
 @media (max-width: 768px) {
   .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
+    width: 280px;
+    height: 100vh;
     top: 0;
-    border-right: none;
-    border-bottom: 1px solid var(--color-border-default);
+    transform: translateX(-100%);
+    transition: transform var(--transition-default);
   }
 
-  .sidebarContent {
-    padding: var(--spacing-md);
-    gap: var(--spacing-md);
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-lg);
   }
 
   :global(body),
   :global(main) {
     margin-left: 0;
+  }
+}
+
+/* Para telas muito pequenas (smartphones menores) */
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
   }
 }
