@@ -33,6 +33,38 @@
   position: relative;
 }
 
+.closeButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-content-default);
+  transition: all var(--transition-default);
+  border-radius: var(--radius-md);
+  z-index: 1;
+}
+
+.closeButton:hover {
+  background-color: var(--color-bg-hovered);
+  color: var(--color-primary);
+}
+
+.closeButton:focus {
+  outline: none;
+  background-color: var(--color-bg-hovered);
+}
+
+.closeButton svg {
+  width: 24px;
+  height: 24px;
+}
+
 .greeting {
   color: var(--color-content-default);
   font-size: var(--font-subtitle);

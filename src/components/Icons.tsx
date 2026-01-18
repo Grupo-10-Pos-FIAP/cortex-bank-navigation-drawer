@@ -103,6 +103,20 @@ export const XIcon = React.memo(() => (
   </svg>
 ));
 
+export const ArrowLeftIcon = React.memo(() => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+  >
+    <line x1="19" y1="12" x2="5" y2="12"></line>
+    <polyline points="12 19 5 12 12 5"></polyline>
+  </svg>
+));
+
 HomeIcon.displayName = "HomeIcon";
 StatementIcon.displayName = "StatementIcon";
 TransactionIcon.displayName = "TransactionIcon";
@@ -110,3 +124,4 @@ ChevronRightIcon.displayName = "ChevronRightIcon";
 LogoutIcon.displayName = "LogoutIcon";
 MenuIcon.displayName = "MenuIcon";
 XIcon.displayName = "XIcon";
+ArrowLeftIcon.displayName = "ArrowLeftIcon";

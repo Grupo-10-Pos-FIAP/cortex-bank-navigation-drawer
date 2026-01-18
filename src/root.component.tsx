@@ -113,7 +113,7 @@ export default function Root() {
       }`}
     >
       <div className={styles.sidebarContent}>
-        <SidebarHeader />
+        <SidebarHeader isMobile={isMobile} onClose={closeSidebar} />
 
         {showError && (
           <ErrorMessage message={error} onRetry={retryLoadAccounts} />
