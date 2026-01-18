@@ -1,41 +1,27 @@
-const ACCOUNT_ID_KEY = "accountId";
+import {
+  getLocalStorageItem,
+  setLocalStorageItem,
+  removeLocalStorageItem,
+  isWindowAvailable,
+} from "./windowUtils";
+import { STORAGE_KEYS } from "@/constants";
+import { AccountIdChangedEvent } from "@/types/events";
 
 export function getAccountId(): string | null {
-  if (typeof window === "undefined" || !window.localStorage) {
-    return null;
-  }
-
-  try {
-    const accountId = localStorage.getItem(ACCOUNT_ID_KEY);
-    return accountId || null;
-  } catch (error) {
-    console.error("Erro ao ler accountId do localStorage:", error);
-    return null;
-  }
+  return getLocalStorageItem(STORAGE_KEYS.ACCOUNT_ID);
 }
 
 export function setAccountId(accountId: string): void {
-  if (typeof window === "undefined" || !window.localStorage) {
-    return;
-  }
-
-  try {
-    localStorage.setItem(ACCOUNT_ID_KEY, accountId);
-    window.dispatchEvent(new CustomEvent("accountIdChanged", { detail: { accountId } }));
-  } catch (error) {
-    console.error("Erro ao salvar accountId no localStorage:", error);
+  if (setLocalStorageItem(STORAGE_KEYS.ACCOUNT_ID, accountId)) {
+    if (isWindowAvailable()) {
+      const event = new CustomEvent("accountIdChanged", {
+        detail: { accountId },
+      }) as AccountIdChangedEvent;
+      window.dispatchEvent(event);
+    }
   }
 }
 
 export function removeAccountId(): void {
-  if (typeof window === "undefined" || !window.localStorage) {
-    return;
-  }
-
-  try {
-    localStorage.removeItem(ACCOUNT_ID_KEY);
-  } catch (error) {
-    console.error("Erro ao remover accountId do localStorage:", error);
-  }
+  removeLocalStorageItem(STORAGE_KEYS.ACCOUNT_ID);
 }
-

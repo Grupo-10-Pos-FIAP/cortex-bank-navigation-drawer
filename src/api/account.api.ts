@@ -26,7 +26,8 @@ export async function fetchAccounts(): Promise<Account[]> {
 
     return data.result.account;
   } catch (error) {
-    throw new Error(error instanceof Error ? error.message : "Erro ao buscar contas");
+    throw new Error(
+      error instanceof Error ? error.message : "Erro ao buscar contas"
+    );
   }
 }
-
