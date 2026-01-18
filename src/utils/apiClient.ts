@@ -30,10 +30,8 @@ export async function fetchApi(
     });
 
     if (!response.ok) {
-      // Redireciona para auth em caso de 401 (não autorizado)
       if (response.status === 401) {
         if (typeof window !== "undefined" && window.localStorage) {
-          // Limpa o token do localStorage antes de redirecionar
           localStorage.removeItem("token");
           window.location.href = "/auth";
         }
@@ -46,14 +44,12 @@ export async function fetchApi(
 
     return response;
   } catch (error) {
-    // Trata erros de rede/CORS de forma mais específica
     if (error instanceof TypeError && error.message.includes("fetch")) {
       throw new Error("Erro de conexão: Não foi possível conectar ao servidor. Verifique se o backend está rodando.");
     }
     if (error instanceof Error && error.message.includes("CORS")) {
       throw new Error("Erro de CORS: O servidor não permite requisições desta origem.");
     }
-    // Re-throw outros erros
     throw error;
   }
 }

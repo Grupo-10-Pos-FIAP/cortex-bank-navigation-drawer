@@ -23,7 +23,6 @@ export default function Root() {
   const [isMobile, setIsMobile] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Verificar se é mobile
   useEffect(() => {
     const checkMobile = () => {
       const mobile = window.innerWidth <= 768;
@@ -31,7 +30,6 @@ export default function Root() {
 
       if (!mobile && isSidebarOpen) {
         setIsSidebarOpen(false);
-        // Fechar o overlay quando mudar para desktop
         window.dispatchEvent(new CustomEvent("sidebar-close"));
       }
     };
@@ -39,7 +37,6 @@ export default function Root() {
     checkMobile();
     window.addEventListener("resize", checkMobile);
 
-    // Ouvir eventos do botão hambúrguer no header
     const handleSidebarToggle = (event: CustomEvent) => {
       setIsSidebarOpen(event.detail.isOpen);
     };
@@ -58,16 +55,13 @@ export default function Root() {
     };
   }, [isSidebarOpen]);
 
-  // Função para fechar sidebar e overlay
   const closeSidebar = useCallback(() => {
     if (isMobile && isSidebarOpen) {
       setIsSidebarOpen(false);
-      // Disparar evento para fechar o overlay no HTML também
       window.dispatchEvent(new CustomEvent("sidebar-close"));
     }
   }, [isMobile, isSidebarOpen]);
 
-  // Função para navegar e fechar sidebar
   const handleNavigate = useCallback(
     (url: string) => {
       if (isMobile) {
@@ -78,7 +72,6 @@ export default function Root() {
     [isMobile, closeSidebar]
   );
 
-  // Fechar sidebar também quando a rota mudar (via navegação externa)
   useEffect(() => {
     const handleRouteChange = () => {
       if (isMobile && isSidebarOpen) {
@@ -150,7 +143,6 @@ export default function Root() {
     return getAccountLabel(account);
   };
 
-  // Formatar data atual
   const currentDate = useMemo(() => {
     const date = new Date();
     const days = [
@@ -169,7 +161,6 @@ export default function Root() {
     return `${dayName}, ${day}/${month}/${year}`;
   }, []);
 
-  // Obter nome do usuário
   const userName = useMemo(() => {
     if (typeof window !== "undefined" && window.localStorage) {
       return localStorage.getItem("userName") || "";
@@ -177,7 +168,6 @@ export default function Root() {
     return "";
   }, []);
 
-  // Detectar rota atual
   const [currentPath, setCurrentPath] = useState<string>(() => {
     if (typeof window !== "undefined") {
       return window.location.pathname;

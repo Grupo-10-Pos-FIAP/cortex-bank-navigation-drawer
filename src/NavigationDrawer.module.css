@@ -1,4 +1,3 @@
-/* CSS do NavDrawer (sidebar) com funcionalidade mobile */
 .sidebar {
   position: fixed;
   left: 0;
@@ -138,7 +137,6 @@
   outline: none;
 }
 
-/* Estilos para mobile */
 @media (max-width: 768px) {
   .sidebar {
     width: 280px;
@@ -159,7 +157,6 @@
   }
 }
 
-/* Para telas muito pequenas (smartphones menores) */
 @media (max-width: 480px) {
   .sidebar {
     width: 100%;
