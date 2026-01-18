@@ -59,17 +59,20 @@ navigation-drawer/
 ### Instalação
 
 1. Clone o repositório:
+
 ```bash
 git clone <url-do-repositorio>
 cd navigation-drawer
 ```
 
 2. Instale as dependências:
+
 ```bash
 npm install
 ```
 
 3. Execute o projeto em modo desenvolvimento:
+
 ```bash
 npm start
 ```
@@ -78,7 +81,7 @@ O microfrontend estará disponível em `http://localhost:3001`
 
 ### Modo Standalone
 
-Para testar o componente de forma isolada:
+Para executar o componente de forma isolada:
 
 ```bash
 npm run start:standalone
@@ -121,26 +124,6 @@ API_BASE_URL=http://localhost:8080 npm start
 
 Ou criar um arquivo `.env.local` (que está no `.gitignore`) apenas para desenvolvimento local. **Nunca commite este arquivo**.
 
-## 🧪 Testes
-
-Execute os testes:
-
-```bash
-npm test
-```
-
-Execute os testes em modo watch:
-
-```bash
-npm run watch-tests
-```
-
-Gere relatório de cobertura:
-
-```bash
-npm run coverage
-```
-
 ## 📦 Deploy
 
 O projeto está configurado para deploy automático na Vercel. O deploy é acionado automaticamente a cada push na branch `main`.
@@ -164,12 +147,10 @@ O projeto inclui headers de segurança configurados no `vercel.json`:
 ## 🔧 Scripts Disponíveis
 
 - `npm start` - Inicia o servidor de desenvolvimento
-- `npm run start:standalone` - Inicia em modo standalone (para testes isolados)
+- `npm run start:standalone` - Inicia em modo standalone (para execução isolada)
 - `npm run build` - Gera o build de produção
 - `npm run lint` - Executa o linter
 - `npm run format` - Formata o código com Prettier
-- `npm test` - Executa os testes
-- `npm run coverage` - Gera relatório de cobertura de testes
 
 ## 📝 Licença
 
