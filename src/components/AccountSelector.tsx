@@ -42,10 +42,10 @@ export function AccountSelector({
         items={accounts.map((account) => ({
           label: getAccountLabel(account),
           value: account.id,
-          onClick: () => onAccountChange(account.id),
+          onClick: () => {},
         }))}
         placeholder={getSelectedAccountLabel(selectedAccountId, accounts)}
-        onValueChange={onAccountChange}
+        onValueChange={() => {}}
         width="100%"
       />
     </div>

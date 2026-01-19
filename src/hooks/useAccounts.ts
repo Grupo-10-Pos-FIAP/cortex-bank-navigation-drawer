@@ -27,16 +27,11 @@ export function useAccounts(): UseAccountsReturn {
       const accountsData = await fetchAccounts();
       setAccounts(accountsData);
 
-      const storedAccountId = getAccountId();
       if (accountsData.length > 0) {
-        const accountToSelect =
-          storedAccountId &&
-          accountsData.find((acc) => acc.id === storedAccountId)
-            ? storedAccountId
-            : accountsData[0].id;
-
-        setSelectedAccountId(accountToSelect);
-        setAccountId(accountToSelect);
+        // Sempre seta o primeiro item do array no localStorage
+        const firstAccountId = accountsData[0].id;
+        setSelectedAccountId(firstAccountId);
+        setAccountId(firstAccountId);
       }
     } catch (err) {
       const errorMessage =
