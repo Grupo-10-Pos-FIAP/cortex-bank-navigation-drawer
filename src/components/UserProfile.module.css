@@ -33,10 +33,11 @@
   gap: var(--spacing-sm);
   flex: 1;
   min-width: 0;
+  cursor: default;
 }
 
 .userName {
-  color: var(--color-white);
+  color: var(--color-white) !important;
   font-size: var(--font-subtitle);
   line-height: 1.4;
   margin: 0;
@@ -46,7 +47,7 @@
 }
 
 .accountInfo {
-  color: var(--color-white);
+  color: var(--color-white) !important;
   font-size: var(--font-small);
   line-height: 1.4;
   margin: 0;
