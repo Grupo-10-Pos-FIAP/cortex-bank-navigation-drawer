@@ -1,7 +1,7 @@
 import React from "react";
 import { Text } from "@grupo10-pos-fiap/design-system";
 import { formatAccountNumber } from "@/utils/accountUtils";
-import { UserIcon, ChevronDownIcon } from "./Icons";
+import { UserIcon } from "./Icons";
 import styles from "./UserProfile.module.css";
 
 interface UserProfileProps {
@@ -23,19 +23,21 @@ export const UserProfile: React.FC<UserProfileProps> = ({
       role="region"
       aria-label="Perfil do usuário"
     >
-      <div className={styles.userIcon} aria-hidden="true">
-        <UserIcon />
-      </div>
-      <div className={styles.userInfo}>
-        <Text variant="subtitle" weight="bold" className={styles.userName}>
+      <div className={styles.userNameRow}>
+        <div className={styles.userIcon} aria-hidden="true">
+          <UserIcon />
+        </div>
+        <Text variant="subtitle" weight="bold" className={styles.userName} style={{ color: 'white' }}>
           {userName.toUpperCase()}
         </Text>
-        <Text variant="small" className={styles.accountInfo}>
-          Agência {agency} Conta {formattedAccount}
-        </Text>
       </div>
-      <div className={styles.dropdownIndicator} aria-hidden="true">
-        <ChevronDownIcon />
+      <div className={styles.accountInfoRow}>
+        <Text variant="small" className={styles.accountInfo} style={{ color: 'white' }}>
+          Agência {agency}
+        </Text>
+        <Text variant="small" className={styles.accountInfo} style={{ color: 'white' }}>
+          Conta {formattedAccount}
+        </Text>
       </div>
     </div>
   );
