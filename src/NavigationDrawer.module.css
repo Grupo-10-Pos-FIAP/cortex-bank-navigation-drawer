@@ -74,6 +74,7 @@
 .date {
   color: var(--color-content-secondary);
   font-size: var(--font-small);
+  cursor: default;
 }
 
 .accountSelectWrapper {
