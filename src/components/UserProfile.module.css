@@ -1,10 +1,10 @@
 .userProfile {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
   padding: var(--spacing-md);
   background-color: var(--color-primary);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   width: 100%;
   box-sizing: border-box;
 }
@@ -24,12 +24,13 @@
 .userIcon svg {
   width: 24px;
   height: 24px;
+  color: var(--color-primary);
 }
 
 .userInfo {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-sm);
   flex: 1;
   min-width: 0;
 }
