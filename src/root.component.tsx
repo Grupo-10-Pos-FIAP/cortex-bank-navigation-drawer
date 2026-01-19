@@ -4,18 +4,20 @@ import { Text, Loading } from "@grupo10-pos-fiap/design-system";
 import { useMobile } from "./hooks/useMobile";
 import { useCurrentPath } from "./hooks/useCurrentPath";
 import { useAccounts } from "./hooks/useAccounts";
-import { SidebarHeader } from "./components/SidebarHeader";
 import { ErrorMessage } from "./components/ErrorMessage";
 import { AccountSelector } from "./components/AccountSelector";
 import { NavLink } from "./components/NavLink";
+import { UserProfile } from "./components/UserProfile";
 import {
   HomeIcon,
   StatementIcon,
   TransactionIcon,
   LogoutIcon,
+  ArrowLeftIcon,
 } from "./components/Icons";
-import { ROUTES, MESSAGES } from "./constants";
-import { clearLocalStorage } from "./utils/windowUtils";
+import { ROUTES, MESSAGES, STORAGE_KEYS } from "./constants";
+import { clearLocalStorage, getLocalStorageItem } from "./utils/windowUtils";
+import { formatCurrentDate } from "./utils/dateUtils";
 import "./styles/tokens.css";
 import styles from "./NavigationDrawer.module.css";
 
@@ -105,6 +107,8 @@ export default function Root() {
   }
 
   const showError = error && accounts.length === 0;
+  const userName = getLocalStorageItem(STORAGE_KEYS.USER_NAME) || "";
+  const currentDate = formatCurrentDate();
 
   return (
     <aside
@@ -113,7 +117,38 @@ export default function Root() {
       }`}
     >
       <div className={styles.sidebarContent}>
-        <SidebarHeader isMobile={isMobile} onClose={closeSidebar} />
+        <div className={styles.header}>
+          {isMobile && (
+            <button
+              className={styles.closeButton}
+              onClick={closeSidebar}
+              aria-label="Fechar menu"
+            >
+              <ArrowLeftIcon />
+            </button>
+          )}
+          {userName && selectedAccountId ? (
+            <>
+              <UserProfile
+                userName={userName}
+                accountNumber={selectedAccountId}
+                agency="0001"
+              />
+              <Text variant="small" color="gray600" className={styles.date}>
+                {currentDate}
+              </Text>
+            </>
+          ) : (
+            <>
+              <Text variant="subtitle" weight="bold" className={styles.greeting}>
+                {MESSAGES.WELCOME} {userName}
+              </Text>
+              <Text variant="small" color="gray600" className={styles.date}>
+                {currentDate}
+              </Text>
+            </>
+          )}
+        </div>
 
         {showError && (
           <ErrorMessage message={error} onRetry={retryLoadAccounts} />
