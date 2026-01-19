@@ -140,7 +140,11 @@ export default function Root() {
             </>
           ) : (
             <>
-              <Text variant="subtitle" weight="bold" className={styles.greeting}>
+              <Text
+                variant="subtitle"
+                weight="bold"
+                className={styles.greeting}
+              >
                 {MESSAGES.WELCOME} {userName}
               </Text>
               <Text variant="small" color="gray600" className={styles.date}>

@@ -18,7 +18,11 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   const formattedAccount = formatAccountNumber(accountNumber);
 
   return (
-    <div className={styles.userProfile} role="region" aria-label="Perfil do usuário">
+    <div
+      className={styles.userProfile}
+      role="region"
+      aria-label="Perfil do usuário"
+    >
       <div className={styles.userIcon} aria-hidden="true">
         <UserIcon />
       </div>

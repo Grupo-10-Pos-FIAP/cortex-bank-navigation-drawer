@@ -13,7 +13,11 @@ export function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
       <Text variant="small" color="error" className={styles.errorMessage}>
         {message}
       </Text>
-      <button onClick={onRetry} className={styles.retryButton} aria-label="Tentar novamente">
+      <button
+        onClick={onRetry}
+        className={styles.retryButton}
+        aria-label="Tentar novamente"
+      >
         Tentar novamente
       </button>
     </div>
