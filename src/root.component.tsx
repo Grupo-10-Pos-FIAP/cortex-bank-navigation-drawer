@@ -168,7 +168,7 @@ export default function Root() {
           </div>
         )}
 
-        <nav className={styles.navLinks}>
+        <nav className={styles.navLinks} aria-label="Navegação principal">
           {NAV_ITEMS.map((item) => (
             <NavLink
               key={item.path}
@@ -183,9 +183,10 @@ export default function Root() {
         <button
           className={`${styles.navLink} ${styles.logoutButton}`}
           onClick={handleLogout}
+          aria-label="Sair da aplicação"
         >
           <div className={styles.navLinkContent}>
-            <LogoutIcon />
+            <LogoutIcon aria-hidden="true" />
             <Text variant="body" weight="regular">
               Sair
             </Text>

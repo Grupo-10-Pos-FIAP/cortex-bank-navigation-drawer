@@ -9,11 +9,11 @@ interface ErrorMessageProps {
 
 export function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
   return (
-    <div className={styles.errorContainer}>
+    <div className={styles.errorContainer} role="alert" aria-live="polite">
       <Text variant="small" color="error" className={styles.errorMessage}>
         {message}
       </Text>
-      <button onClick={onRetry} className={styles.retryButton}>
+      <button onClick={onRetry} className={styles.retryButton} aria-label="Tentar novamente">
         Tentar novamente
       </button>
     </div>

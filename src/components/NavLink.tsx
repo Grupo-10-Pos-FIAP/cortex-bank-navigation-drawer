@@ -15,14 +15,16 @@ export function NavLink({ icon, label, isActive, onClick }: NavLinkProps) {
     <button
       className={`${styles.navLink} ${isActive ? styles.navLinkActive : ""}`}
       onClick={onClick}
+      aria-label={label}
+      aria-current={isActive ? "page" : undefined}
     >
       <div className={styles.navLinkContent}>
-        {icon}
+        <span aria-hidden="true">{icon}</span>
         <Text variant="body" weight={isActive ? "semibold" : "regular"}>
           {label}
         </Text>
       </div>
-      <ChevronRightIcon />
+      <ChevronRightIcon aria-hidden="true" />
     </button>
   );
 }
