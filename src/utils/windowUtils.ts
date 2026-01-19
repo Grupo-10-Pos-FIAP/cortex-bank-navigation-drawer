@@ -1,7 +1,3 @@
-/**
- * Utilitário para verificações seguras de window e localStorage
- */
-
 export function isWindowAvailable(): boolean {
   return typeof window !== "undefined";
 }

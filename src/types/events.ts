@@ -1,7 +1,3 @@
-/**
- * Tipos para eventos customizados do sistema
- */
-
 export interface SidebarToggleEvent extends CustomEvent {
   detail: {
     isOpen: boolean;
@@ -14,9 +10,7 @@ export interface AccountIdChangedEvent extends CustomEvent {
   };
 }
 
-export interface SidebarCloseEvent extends CustomEvent {
-  // Evento simples sem detalhes
-}
+export interface SidebarCloseEvent extends CustomEvent {}
 
 declare global {
   interface WindowEventMap {

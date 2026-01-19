@@ -1,8 +1,5 @@
 import { DAYS_OF_WEEK } from "@/constants";
 
-/**
- * Formata a data atual no formato: "Dia da semana, DD/MM/YYYY"
- */
 export function formatCurrentDate(): string {
   const date = new Date();
   const dayName = DAYS_OF_WEEK[date.getDay()];
