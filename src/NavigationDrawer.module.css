@@ -1,11 +1,10 @@
 .sidebar {
   position: fixed;
   left: 0;
-  top: 50px;
+  top: 55px;
   height: calc(100vh - 50px);
   width: 280px;
   background-color: var(--color-bg-default);
-  border-right: 1px solid var(--color-border-default);
   box-shadow: var(--shadow-sm);
   z-index: 1000;
   overflow-y: auto;
@@ -16,7 +15,7 @@
 .sidebarContent {
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-md);
+  padding: 1rem var(--spacing-md) var(--spacing-md) var(--spacing-md);
   gap: var(--spacing-md);
   min-height: 100%;
   box-sizing: border-box;
@@ -28,9 +27,12 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   padding-bottom: var(--spacing-sm);
-  border-bottom: 1px solid var(--color-border-default);
   flex-shrink: 0;
   position: relative;
+  margin: -1rem calc(var(--spacing-md) * -1) 0 calc(var(--spacing-md) * -1);
+  padding-top: 0;
+  padding-left: var(--spacing-md);
+  padding-right: 0;
 }
 
 .closeButton {
@@ -80,6 +82,8 @@
 .accountSelectWrapper {
   width: 100%;
   flex-shrink: 0;
+  pointer-events: none;
+  opacity: 0.7;
 }
 
 .navLinks {
