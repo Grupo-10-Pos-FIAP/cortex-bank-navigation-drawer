@@ -1,5 +1,7 @@
 import React from "react";
-import { Text, Icon } from "@grupo10-pos-fiap/design-system";
+import { Text } from "@grupo10-pos-fiap/design-system";
+import { formatAccountNumber } from "@/utils/accountUtils";
+import { UserIcon, ChevronDownIcon } from "./Icons";
 import styles from "./UserProfile.module.css";
 
 interface UserProfileProps {
@@ -13,25 +15,12 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   accountNumber,
   agency = "0001",
 }) => {
-  const formatAccountNumber = (accountId: string): string => {
-    if (!accountId) return "";
-    const numericOnly = accountId.replace(/\D/g, "");
-    if (numericOnly.length >= 7) {
-      const last7 = numericOnly.slice(-7);
-      return `${last7.slice(0, 6)}-${last7.slice(6)}`;
-    }
-    if (numericOnly.length >= 6) {
-      return `${numericOnly.slice(-6)}-${numericOnly.slice(-1)}`;
-    }
-    return accountId.slice(-7) || accountId;
-  };
-
   const formattedAccount = formatAccountNumber(accountNumber);
 
   return (
-    <div className={styles.userProfile}>
-      <div className={styles.userIcon}>
-        <Icon name="User" size="medium" color="primary" />
+    <div className={styles.userProfile} role="region" aria-label="Perfil do usuário">
+      <div className={styles.userIcon} aria-hidden="true">
+        <UserIcon />
       </div>
       <div className={styles.userInfo}>
         <Text variant="subtitle" weight="bold" className={styles.userName}>
@@ -41,8 +30,8 @@ export const UserProfile: React.FC<UserProfileProps> = ({
           Agência {agency} Conta {formattedAccount}
         </Text>
       </div>
-      <div className={styles.dropdownIndicator}>
-        <Icon name="ChevronDown" size="small" color="white" />
+      <div className={styles.dropdownIndicator} aria-hidden="true">
+        <ChevronDownIcon />
       </div>
     </div>
   );

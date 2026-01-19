@@ -2,6 +2,7 @@ import React from "react";
 import { Dropdown, Text } from "@grupo10-pos-fiap/design-system";
 import { Account } from "@/api/account.api";
 import { MESSAGES } from "@/constants";
+import { formatAccountLabel } from "@/utils/accountUtils";
 import styles from "../NavigationDrawer.module.css";
 
 interface AccountSelectorProps {
@@ -11,7 +12,7 @@ interface AccountSelectorProps {
 }
 
 function getAccountLabel(account: Account): string {
-  return `${account.type} - ${account.id.slice(-4)}`;
+  return formatAccountLabel(account.type, account.id);
 }
 
 function getSelectedAccountLabel(
