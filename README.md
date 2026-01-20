@@ -2,7 +2,7 @@
 
 Microfrontend de navegação desenvolvido como parte do trabalho de pós-graduação em Engenharia de Front End.
 
-## 📋 Sobre o Projeto
+## Sobre o Projeto
 
 Este projeto é um microfrontend responsável pelo componente de navegação lateral (sidebar) do Cortex Bank. Ele foi desenvolvido utilizando a arquitetura de microfrontends com Single-SPA, permitindo que seja carregado e gerenciado de forma independente dentro de uma aplicação maior.
 
@@ -16,7 +16,7 @@ Este projeto é um microfrontend responsável pelo componente de navegação lat
 - **Tratamento de erros** com error boundary isolado
 - **Integração com API** para busca de contas
 
-## 🛠️ Tecnologias
+## Tecnologias
 
 - **React 19** - Biblioteca para construção da interface
 - **TypeScript** - Tipagem estática
@@ -25,7 +25,7 @@ Este projeto é um microfrontend responsável pelo componente de navegação lat
 - **CSS Modules** - Estilização modular
 - **Design System** - `@grupo10-pos-fiap/design-system` para componentes padronizados
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 navigation-drawer/
@@ -33,11 +33,23 @@ navigation-drawer/
 │   ├── api/                    # Chamadas à API
 │   │   └── account.api.ts
 │   ├── components/             # Componentes reutilizáveis
+│   │   └── AccountSelector.tsx
+│   │   └── ErrorMessage.tsx
 │   │   └── Icons.tsx
+│   │   └── NavLink.tsx
+│   │   └── UserProfile.tsx
 │   ├── config/                 # Configurações
 │   │   └── api.config.ts
+│   ├── constants/             # Constantes Globais
+│   │   └── index.ts
+│   ├── hooks/                 # Hooks Customizados
+│   │   └── useAccount.ts
+│   │   └── useCurrentPath.ts
+│   │   └── useMobile.ts
 │   ├── styles/                 # Estilos globais
 │   │   └── tokens.css
+│   ├── types/                 # Types Globais
+│   │   └── events.ts
 │   ├── utils/                  # Utilitários
 │   │   ├── accountStorage.ts
 │   │   └── apiClient.ts
@@ -49,12 +61,11 @@ navigation-drawer/
 └── vercel.json                 # Configuração do Vercel
 ```
 
-## 🚀 Como Executar
+## Como Executar
 
 ### Pré-requisitos
 
-- Node.js (versão 16 ou superior)
-- npm ou yarn
+- Node.js (versão 20 ou superior)
 
 ### Instalação
 
@@ -95,7 +106,7 @@ Para gerar o build de produção:
 npm run build
 ```
 
-## 🔐 Variáveis de Ambiente e Segurança
+## Variáveis de Ambiente e Segurança
 
 ### ⚠️ Importante: Segurança de Variáveis de Ambiente
 
@@ -124,7 +135,7 @@ API_BASE_URL=http://localhost:8080 npm start
 
 Ou criar um arquivo `.env.local` (que está no `.gitignore`) apenas para desenvolvimento local. **Nunca commite este arquivo**.
 
-## 📦 Deploy
+## Deploy
 
 O projeto está configurado para deploy automático na Vercel. O deploy é acionado automaticamente a cada push na branch `main`.
 
@@ -144,7 +155,7 @@ O projeto inclui headers de segurança configurados no `vercel.json`:
 - `Referrer-Policy: strict-origin-when-cross-origin`
 - `Content-Security-Policy` configurado para permitir apenas recursos confiáveis
 
-## 🔧 Scripts Disponíveis
+## Scripts Disponíveis
 
 - `npm start` - Inicia o servidor de desenvolvimento
 - `npm run start:standalone` - Inicia em modo standalone (para execução isolada)
@@ -152,10 +163,11 @@ O projeto inclui headers de segurança configurados no `vercel.json`:
 - `npm run lint` - Executa o linter
 - `npm run format` - Formata o código com Prettier
 
-## 📝 Licença
+## Licença
 
 Este projeto foi desenvolvido como parte do trabalho de pós-graduação em Engenharia de Front End.
 
-## 👥 Autores
+## Autores
 
-Grupo 10 - Pós-graduação FIAP
+- [Gabrielle Martins](https://github.com/Gabrielle-96)
+- [Helen Cris](https://github.com/HelenCrisM)
